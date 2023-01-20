@@ -27,6 +27,18 @@ namespace pet_hotel.Controllers
                 .Include(pet => pet.ownedBy);
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Pet> GetById(int id) 
+        {
+            var pet = _context.Pets.SingleOrDefault(pet => pet.id == id);
+
+            if(pet is null)
+            {
+                return NotFound();
+            }
+            return pet;
+        }
+
         [HttpPost]
         public Pet Post(Pet pet)
         {
@@ -34,6 +46,40 @@ namespace pet_hotel.Controllers
             _context.SaveChanges();
             return pet;
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Pet pet)
+        {
+            // This code will update the pizza and return a result
+            if (id != pet.id)
+                return BadRequest();
+                
+            pet = _context.Pets.SingleOrDefault(pet => pet.id == id);
+
+            if(pet is null)
+                return NotFound();
+        
+            _context.Update(pet);           
+        
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var pet = _context.Pets.SingleOrDefault(pet => pet.id == id);
+            if(pet is null)
+            {
+                return NotFound();
+            }
+
+            _context.Remove(pet);
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
 
         // [HttpGet]
         // [Route("test")]

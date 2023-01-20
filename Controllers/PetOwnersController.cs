@@ -36,28 +36,49 @@ namespace pet_hotel.Controllers
             return petOwner;
         }
 
-        // [HttpPost]
-        // public PetOwner Post(PetOwner petOwner)
-        // {
-        //     _context.Add(petOwner);
+        [HttpPost]
+        public PetOwner Post(PetOwner petOwner)
+        {
+            _context.Add(petOwner);
 
-        //     _context.SaveChanges();
+            _context.SaveChanges();
 
-        //     return petOwner;
-        // }
+            return petOwner;
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, PetOwner petOwner)
+        {
+            // This code will update the pizza and return a result
+            if (id != petOwner.id)
+                return BadRequest();
+                
+            petOwner = _context.PetOwners.SingleOrDefault(petOwner => petOwner.id == id);
+
+            if(petOwner is null)
+                return NotFound();
         
-        // [HttpDelete("{id}")]
-        // public IActionResult Delete(int id)
-        // {
-        //     var owner = PetOwnerService.Get(id);
+            _context.Update(petOwner);  
 
-        //     if(owner is null)
-        //         return NotFound();
+            _context.SaveChanges();         
+        
+            return NoContent();
+        }
+        
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            PetOwner petOwner = _context.PetOwners.SingleOrDefault(petOwner => petOwner.id == id);
+
+            if(petOwner is null)
+                return NotFound();
             
-        //     PetOwnerService.Delete(id);
+            _context.Remove(id);
 
-        //     return NoContent();
-        // }
+            _context.SaveChanges();
+
+            return NoContent();
+        }
         
     }
 }
